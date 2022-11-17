@@ -43,7 +43,13 @@ struct ContentView: View {
             }
             .preferredColorScheme(.dark)
             .alert(isPresented: $gameOver) {
-                Alert(title: Text(winMessage))
+                Alert(title: Text(winMessage), dismissButton: .destructive(Text("Play again"),
+                                                                           action: {
+                    withAnimation {
+                        moves = Array(repeating: "", count: 9)
+                        gameOver = false
+                    }
+                }))
             }
             .padding()
             .onChange(of: moves) { newValue in
@@ -61,6 +67,10 @@ struct ContentView: View {
         checkLine(a: 2, b: 5, c: 8) // third column
         checkLine(a: 0, b: 4, c: 8) // first diagonal
         checkLine(a: 2, b: 4, c: 6) // second diagonal
+        if !(gameOver || moves.contains("")) {
+            winMessage = "Cat's Game"
+            gameOver = true
+        }
     }
     
     private func checkLine(a: Int, b: Int, c: Int) {
@@ -71,9 +81,9 @@ struct ContentView: View {
     }
 }
 
-    struct ContentView_Previews: PreviewProvider {
-        static var previews: some View {
-            ContentView()
-        }
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
+}
 
